@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aşk Alarmı - Sevgililer Günü</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --pink-primary: #ff76ad;
+            --pink-bg: #ffe0eb;
+            --white: #ffffff;
+            --blue-tag: #5094f3;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--pink-bg);
+            background-image: radial-gradient(var(--white) 20%, transparent 20%);
+            background-size: 40px 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .main-card {
+            position: relative;
+            background: var(--white);
+            padding: 30px 20px;
+            border-radius: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 95%;
+            text-align: center;
+            border: 6px solid var(--pink-primary);
+            z-index: 10;
+        }
+
+        /* GÖRSELLERİN KONUMLARI */
+        .hk-kalp {
+            position: absolute;
+            top: -50px;
+            left: -70px; 
+            width: 130px; 
+            transform: rotate(-10deg);
+            z-index: 15;
+        }
+
+        .hk-prense {
+            position: absolute;
+            top: -40px;
+            right: -60px;
+            width: 120px;
+            transform: rotate(15deg);
+            z-index: 15;
+        }
+        
+        .user-group {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            display: flex;
+            flex-direction: row; 
+            align-items: center; 
+            gap: 20px; 
+            z-index: 20;
+        }
+        
+        .hk-bakiyor { 
+            width: 130px; 
+        }
+
+        /* OK YÖNÜ DÜZELTİLDİ: Fotoğrafı göstermesi için sola bakıyor */
+        .label-siz {
+            background: var(--blue-tag);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 12px;
+            font-size: 24px; 
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+
+        h1 { color: var(--pink-primary); margin-bottom: 5px; font-size: 1.8rem; }
+        h1::before, h1::after { content: "⚠️"; margin: 0 8px; }
+        .sub-title { color: #d84d84; font-size: 16px; margin-top: 5px; }
+
+        #timer {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 65px;
+            font-weight: bold;
+            color: #ff0000;
+            background: #fffafa;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 15px;
+            text-shadow: 0 0 5px rgba(255,0,0,0.3);
+        }
+
+        .pin-display {
+            font-size: 32px;
+            letter-spacing: 12px;
+            color: var(--pink-primary);
+            border: 3px solid #ffc0d9;
+            border-radius: 15px;
+            padding: 12px;
+            margin-bottom: 25px;
+            background: #fff;
+            min-height: 40px;
+        }
+
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
+        .key {
+            background: var(--white);
+            border: 2px solid #ffe0eb;
+            padding: 18px;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--pink-primary);
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #ffe0eb;
+            transition: 0.1s;
+        }
+        .key:active { transform: translateY(5px); box-shadow: none; }
+
+        .unlock-btn {
+            background: linear-gradient(180deg, #ff85b9, #d84d84);
+            color: white;
+            border: none;
+            padding: 18px;
+            width: 100%;
+            border-radius: 30px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(216, 77, 132, 0.4);
+        }
+
+        .hidden { display: none !important; }
+
+        .gif-container img { width: 100%; border-radius: 20px; margin-bottom: 25px; }
+        #yesBtn { background-color: #4caf50; color: white; border: none; padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1.2rem; }
+        #noBtn { background-color: #f44336; color: white; border: none; padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1.2rem; position: relative; }
+    </style>
+</head>
+<body>
+
+    <div class="user-group" id="decor3">
+        <img src="hello2.jpg" alt="Siz" class="hk-bakiyor">
+        <div class="label-siz">⬅ siz</div>
+    </div>
+
+    <div class="main-card">
+        <div id="loginSection">
+            <img src="hello1.jpg" alt="" class="hk-kalp" id="decor1">
+            <img src="hello3.png" alt="" class="hk-prense" id="decor2">
+
+            <h1>AŞK ALARMI!</h1>
+            <p class="sub-title">Kalbimin kilidi devreye girdi!</p>
+            
+            <div id="timer">00:50</div>
+            
+            <div class="pin-display" id="pin-display">_ _ _ _</div>
+            
+            <div class="keypad">
+                <button class="key" onclick="press('1')">1</button>
+                <button class="key" onclick="press('2')">2</button>
+                <button class="key" onclick="press('3')">3</button>
+                <button class="key" onclick="press('4')">4</button>
+                <button class="key" onclick="press('5')">5</button>
+                <button class="key" onclick="press('6')">6</button>
+                <button class="key" onclick="press('7')">7</button>
+                <button class="key" onclick="press('8')">8</button>
+                <button class="key" onclick="press('9')">9</button>
+                <button class="key" style="color:red;" onclick="clearPin()">C</button>
+                <button class="key" onclick="press('0')">0</button>
+                <button class="key" onclick="checkPin()">OK</button>
+            </div>
+            <button class="unlock-btn" onclick="checkPin()">KİLİDİ AÇ 💞</button>
+        </div>
+
+        <div id="askSection" class="hidden">
+            <div class="gif-container">
+                <img id="mainGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp6bm5nbm5nbm5nbm5nbm5nbm5nbm5nbm5nbm5nbm5nbm5nbm5nbmZpZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Sevimli Ayı">
+            </div>
+            <h1>Valentine'ım olur musun? ❤️</h1>
+            <div style="display: flex; justify-content: center; gap: 20px;">
+                <button id="yesBtn">EVET!</button>
+                <button id="noBtn">Seni Sevmiyorum</button>
+            </div>
+        </div>
+
+        <div id="successSection" class="hidden">
+            <div class="gif-container">
+                <img src="hanım.gif" alt="Mutlu Ayı">
+            </div>
+            <h2 style="color: #d32f2f;">Sizin tipinizi yerim 🥰</h2>
+            <p style="font-size: 18px;">Artık pompompurinimsiniz</p>
+        </div>
+    </div>
+
+    <script>
+        // --- SÜREKLİ YENİLENEN SAYAÇ ---
+        let timeLeft = 50;
+        const timerDisplay = document.getElementById('timer');
+        const countdown = setInterval(() => {
+            timeLeft--;
+            let displaySec = timeLeft < 10 ? '0' + timeLeft : timeLeft;
+            timerDisplay.innerText = `00:${displaySec}`;
+            
+            // Süre bitince 50'den tekrar başla
+            if (timeLeft <= 0) {
+                timeLeft = 50;
+            }
+        }, 1000);
+
+        let currentPin = "";
+        const DOGRU_SIFRE = "1907"; // Fenerbahçe :)
+        const pinDisplay = document.getElementById('pin-display');
+
+        function press(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                renderPin();
+            }
+        }
+
+        function clearPin() {
+            currentPin = "";
+            renderPin();
+        }
+
+        function renderPin() {
+            let dots = currentPin.split("").join(" ");
+            let placeholders = "_ ".repeat(4 - currentPin.length);
+            pinDisplay.innerText = dots + " " + placeholders;
+        }
+
+        function checkPin() {
+            if (currentPin === DOGRU_SIFRE) {
+                clearInterval(countdown);
+                
+                // Şifre bilinince konfeti patlat
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ff0000', '#ff69b4', '#ffffff']
+                });
+
+                // Kısa bir beklemeden sonra sayfayı değiştir
+                setTimeout(() => {
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('decor1').classList.add('hidden');
+                    document.getElementById('decor2').classList.add('hidden');
+                    document.getElementById('decor3').classList.add('hidden');
+                    document.getElementById('askSection').classList.remove('hidden');
+                }, 500);
+            } else {
+                alert("Hatalı şifre! Kalbime giremedin :(");
+                clearPin();
+            }
+        }
+
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        let yesScale = 1;
+
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
+
+        function moveButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            yesScale += 0.25;
+            yesBtn.style.transform = `scale(${yesScale})`;
+        }
+
+        yesBtn.addEventListener('click', () => {
+            document.getElementById('askSection').classList.add('hidden');
+            document.getElementById('successSection').classList.remove('hidden');
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.6 }
+            });
+        });
+    </script>
+</body>
+</html>
