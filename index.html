@@ -75,7 +75,6 @@
             width: 130px; 
         }
 
-        /* OK YÖNÜ DÜZELTİLDİ: Fotoğrafı göstermesi için sola bakıyor */
         .label-siz {
             background: var(--blue-tag);
             color: white;
@@ -87,9 +86,8 @@
             white-space: nowrap;
         }
 
-        h1 { color: var(--pink-primary); margin-bottom: 5px; font-size: 1.8rem; }
+        h1 { color: var(--pink-primary); margin-bottom: 5px; font-size: 1.8rem; margin-top: 10px; }
         h1::before, h1::after { content: "⚠️"; margin: 0 8px; }
-        .sub-title { color: #d84d84; font-size: 16px; margin-top: 5px; }
 
         #timer {
             font-family: 'Courier New', Courier, monospace;
@@ -163,7 +161,6 @@
             <img src="hello3.png" alt="" class="hk-prense" id="decor2">
 
             <h1>AŞK ALARMI!</h1>
-            <p class="sub-title">Kalbimin kilidi devreye girdi!</p>
             
             <div id="timer">00:50</div>
             
@@ -207,22 +204,19 @@
     </div>
 
     <script>
-        // --- SÜREKLİ YENİLENEN SAYAÇ ---
         let timeLeft = 50;
         const timerDisplay = document.getElementById('timer');
         const countdown = setInterval(() => {
             timeLeft--;
             let displaySec = timeLeft < 10 ? '0' + timeLeft : timeLeft;
             timerDisplay.innerText = `00:${displaySec}`;
-            
-            // Süre bitince 50'den tekrar başla
             if (timeLeft <= 0) {
                 timeLeft = 50;
             }
         }, 1000);
 
         let currentPin = "";
-        const DOGRU_SIFRE = "1907"; // Fenerbahçe :)
+        const DOGRU_SIFRE = "1501";
         const pinDisplay = document.getElementById('pin-display');
 
         function press(num) {
@@ -246,8 +240,6 @@
         function checkPin() {
             if (currentPin === DOGRU_SIFRE) {
                 clearInterval(countdown);
-                
-                // Şifre bilinince konfeti patlat
                 confetti({
                     particleCount: 150,
                     spread: 70,
@@ -255,7 +247,6 @@
                     colors: ['#ff0000', '#ff69b4', '#ffffff']
                 });
 
-                // Kısa bir beklemeden sonra sayfayı değiştir
                 setTimeout(() => {
                     document.getElementById('loginSection').classList.add('hidden');
                     document.getElementById('decor1').classList.add('hidden');
